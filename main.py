@@ -22,6 +22,11 @@ POEM = (
 
 DST = os.path.join(os.environ.get("MAKEFUN_OUTPUT_DIR", "/output"), "entry.txt")
 
+# Gate self-check: the sealed scorer requires 1-280 Unicode code points,
+# not only whitespace. Fail loudly here rather than shipping an invalid text.
+if not (1 <= len(POEM) <= 280 and POEM.strip()):
+    raise SystemExit(f"poem fails the gate: {len(POEM)} characters")
+
 os.makedirs(os.path.dirname(DST), exist_ok=True)
 with open(DST, "w", encoding="utf-8", newline="\n") as f:
     f.write(POEM)
